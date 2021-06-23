@@ -47,6 +47,7 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
+  activerecord
   pry
   rake
   require_all
