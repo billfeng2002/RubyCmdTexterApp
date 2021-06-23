@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_06_23_060201) do
+ActiveRecord::Schema.define(version: 2021_06_23_063321) do
 
   create_table "chatrooms", force: :cascade do |t|
     t.string "name"
@@ -23,6 +23,11 @@ ActiveRecord::Schema.define(version: 2021_06_23_060201) do
     t.integer "user_id"
     t.integer "chatroom_id"
     t.string "value"
+  end
+
+  create_table "userchatrooms", force: :cascade do |t|
+    t.integer "user_id"
+    t.integer "chatroom_id"
   end
 
   create_table "users", force: :cascade do |t|
