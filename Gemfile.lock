@@ -46,6 +46,7 @@ GEM
     zeitwerk (2.4.2)
 
 PLATFORMS
+  universal-darwin-19
   x86_64-linux
 
 DEPENDENCIES
@@ -55,7 +56,7 @@ DEPENDENCIES
   rake
   require_all
   sinatra-activerecord
-  sqlite3
+  sqlite3 (~> 1.4.2)
 
 BUNDLED WITH
    2.2.20
