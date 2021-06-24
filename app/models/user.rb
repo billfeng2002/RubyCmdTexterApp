@@ -13,4 +13,9 @@ class User < ActiveRecord::Base
     def name_and_username
         "#{self.first_name} #{self.last_name} (#{self.username})"
     end
+    
+    def self.check_login(username:, password:)
+        User.find_by(username: username, password: password)
+    end
+
 end
