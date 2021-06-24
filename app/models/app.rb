@@ -14,7 +14,22 @@ class App
         puts "Editing account info..."
         self.edit_account_info
     when 1
+      puts "Displaying chatrooms"
+      rooms = self.get_chatrooms
+      room_ids = rooms.map { |each_room| each_room.room_code }
+      room_names = rooms.map { |each_room| each_room.name }
 
+      puts "Room Ids: #{room_ids}"
+      puts "Room Names: #{}"
+
+      print "Type ID"
+      type_id=$stdin.gets.chomp
+
+      if room_ids.include? type_id
+        puts "Joined Room"
+      end
+
+      self.view_general_options
     when 2
 
     when 3
@@ -23,6 +38,10 @@ class App
         self.clear_data
         self.main_sequence
     end
+  end
+
+  def get_chatrooms
+    self.user.chatrooms
   end
 
   def edit_account_info
