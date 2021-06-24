@@ -16,20 +16,23 @@ class App
     when 1
       puts "Displaying chatrooms"
       rooms = self.get_chatrooms
-      room_ids = rooms.map { |each_room| each_room.room_code }
+      room_codes = rooms.map { |each_room| each_room.room_code }
       room_names = rooms.map { |each_room| each_room.name }
 
-      puts "Room Ids: #{room_ids}"
-      puts "Room Names: #{}"
-
-      print "Type ID"
-      type_id=$stdin.gets.chomp
-
-      if room_ids.include? type_id
-        puts "Joined Room"
+      display_rooms = rooms.map do |each_room|
+        "#{each_room.name} (#{each_room.room_code})"
       end
 
-      self.view_general_options
+      display_rooms << "Go back"
+
+      response = App.display_menu_and_get_input(choices=display_rooms, message="Choose a room")
+
+      if response == display_rooms.size - 1
+        self.view_general_options
+      else
+        current_room = display_rooms[response]
+        # next screen
+      end
     when 2
         self.join_chatroom
     when 3
