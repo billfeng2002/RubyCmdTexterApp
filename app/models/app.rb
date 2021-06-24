@@ -41,6 +41,8 @@ class App
     else
       current_room = display_rooms[response]
       # next screen
+        #todo: manage room (if user is owner), leave room, view room details, join chatroom
+        #todo for join chatroom: figure out how to display data nicely and to send messages nicely
     end
   end
 
