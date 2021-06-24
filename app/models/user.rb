@@ -8,4 +8,9 @@ class User < ActiveRecord::Base
         return !!(User.find_by(username: username))
     end
 
+    
+    def self.check_login(username:, password:)
+        User.find_by(username: username, password: password)
+    end
+
 end
