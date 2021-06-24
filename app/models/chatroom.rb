@@ -14,8 +14,18 @@ class Chatroom < ActiveRecord::Base
 
     # return names of users in chatroom
     def members
-        self.users.map{|user| "#{user.first_name} #{user.last_name} (#{user.username})"}
+        self.users.map{|user| user.name_and_username}
         #self.users.map{|user| "#{user.first_name} #{user.last_name}"}
+    end
+    
+    # returns an array of users ordered by the number of messages sent
+    def user_activity
+        self.users.sort_by{|user| user.messages.count}.reverse
+    end
+
+    # returns an array of users and the number of messages they've sent
+    def top_users
+        user_activity.map{|user| "#{user.name_and_username}: #{user.messages.count} messages."}
     end
 
     
