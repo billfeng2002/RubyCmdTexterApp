@@ -16,13 +16,53 @@ class App
     when 1
 
     when 2
-
+        self.join_chatroom
     when 3
-        
+        self.create_chatroom
     when 4
         self.clear_data
         self.main_sequence
     end
+  end
+
+  def create_chatroom
+    puts "Creating new chatroom..."
+    print "Enter Room Name:"
+    room_name=App.get_non_empty_input("Enter Room Name:")
+    print "Enter Room Code:"
+    room_code=App.get_non_empty_input("Enter Room Code:")
+    while(Chatroom.find_by(room_code: room_code)!=nil)
+        puts "Room code already taken! Try again."
+        print "Enter Room Code:"
+        room_code=$stdin.gets.chomp
+    end
+    print "Enter Room Password(Press enter if none):"
+    room_password=$stdin.gets.chomp
+    chatroom=Chatroom.create(name: room_name, password: room_password, room_code: room_code, owner_id: self.user.id)
+    Userchatroom.create(user_id: self.user.id, chatroom_id: chatroom.id)
+    puts "Chatroom #{room_name} (code: #{room_code}) created!"
+    sleep(1)
+    self.view_general_options
+  end
+
+  def join_chatroom
+    print "Enter room code:"
+    room_code=$stdin.gets.chomp
+    print "Enter room password(Enter if none):"
+    password=$stdin.gets.chomp
+
+    result=Chatroom.find_chatroom(code: room_code, password: password)
+
+    if(!result)
+        puts "Room not found."
+    elsif (self.user.chatrooms.include?(result))
+        puts "Already in this room!"
+    else
+        Userchatroom.create(user_id: self.user.id, chatroom_id: result.id)
+        puts "Room #{result.name} (code: #{room_code}) successfully joined!"
+    end
+    sleep(1)
+    self.view_general_options
   end
 
   def edit_account_info
