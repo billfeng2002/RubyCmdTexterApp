@@ -60,7 +60,7 @@ class App
         last_name=$stdin.gets.chomp
         print "Are you sure you want to change your name to #{last_name}? (type Y for yes)"
         confirmation=$stdin.gets.chomp
-        if(confirmation='Y')
+        if(confirmation=='Y')
             self.user.last_name=last_name
             self.user.save
             puts "First name changed..."
