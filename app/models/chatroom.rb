@@ -28,5 +28,9 @@ class Chatroom < ActiveRecord::Base
         user_activity.map{|user| "#{user.name_and_username}: #{user.messages.count} messages."}
     end
 
+    # returns an array of messages that contain some word
+    def search(substr)
+        self.messages.select{|message| message.value.include? substr}
+    end
     
 end
