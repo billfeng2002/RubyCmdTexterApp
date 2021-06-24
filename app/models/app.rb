@@ -1,5 +1,5 @@
 class App
-  attr_accessor :user
+  attr_accessor :user, :current_room
 
   def self.new_session()
     app = self.new()
@@ -7,8 +7,76 @@ class App
   end
 
   def view_general_options
-    choices=["Edit Account Info", "View My Chat Rooms", "Join a Chat Room", "Create New Chat Room", "Log Out"]
-    response=App.display_menu_and_get_input(choices)
+    choices=["Edit Account Info", "View My Chat Rooms", "Join a Chat Room by Code", "Create New Chat Room", "Log Out"]
+    response=App.display_menu_and_get_input(choices, show_name: "Hi #{self.user.first_name}!")
+    case response
+    when 0
+        puts "Editing account info..."
+        self.edit_account_info
+    when 1
+
+    when 2
+
+    when 3
+        
+    when 4
+        self.clear_data
+        self.main_sequence
+    end
+  end
+
+  def edit_account_info
+    choices=["Change password", "Change first name", "Change last name", "Done"]
+    response=App.display_menu_and_get_input(choices, show_name: "Name: #{self.user.full_name}  Username: #{self.user.username}  Password: ********")
+    case response
+    when 0
+        print "Old password:"
+        password=$stdin.gets.chomp
+        if(password==self.user.password)
+            puts "Password Verified!"
+            puts "Enter new password:"
+            self.user.password=App.get_non_empty_input("Enter new password:")
+            self.user.save
+            puts "Password saved!"
+        else
+            puts "Password incorrect"
+        end
+        self.edit_account_info
+    when 1
+        print "New First Name:"
+        first_name=$stdin.gets.chomp
+        print "Are you sure you want to change your name to #{first_name}? (type Y for yes)"
+        confirmation=$stdin.gets.chomp
+        if(confirmation=='Y')
+            self.user.first_name=first_name
+            self.user.save
+            puts "First name changed..."
+        else
+            puts "Operation cancelled..."
+        end
+        self.edit_account_info
+    when 2
+        print "New Last Name:"
+        last_name=$stdin.gets.chomp
+        print "Are you sure you want to change your name to #{last_name}? (type Y for yes)"
+        confirmation=$stdin.gets.chomp
+        if(confirmation='Y')
+            self.user.last_name=last_name
+            self.user.save
+            puts "First name changed..."
+        else
+            puts "Operation cancelled..."
+        end
+        self.edit_account_info
+    when 3
+        self.view_general_options
+    end
+
+  end
+
+  def clear_data
+    self.user=nil
+    self.current_room = nil
   end
 
   def main_sequence
@@ -98,16 +166,22 @@ class App
     str.chars.detect { |ch| !chars.include?(ch) }.nil?
   end
 
-  def self.get_non_empty_input()
+  def self.get_non_empty_input(prompt="")
     input = ""
-    while ((input = $stdin.gets.chomp) == "")
+    input=$stdin.gets.chomp
+    while (input == "")
       puts "Please provide a non-empty input!"
+      print prompt
+      input = $stdin.gets.chomp
     end
     return input
   end
 
-  def self.display_menu_and_get_input(output, message = "Select a following option (type the number):")
+  def self.display_menu_and_get_input(output, message = "Please select one of the following options (type the number):", show_name:nil)
     puts '#############################'
+    if(show_name)
+        puts "#{show_name}"
+    end
     puts message
     output.each_with_index { |item, index| puts "#{index + 1}. #{item}" }
     validated = false
