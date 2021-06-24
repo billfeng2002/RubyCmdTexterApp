@@ -6,6 +6,11 @@ class App
     app.main_sequence
   end
 
+  def view_general_options
+    choices=["Edit Account Info", "View My Chat Rooms", "Join a Chat Room", "Create New Chat Room", "Log Out"]
+    response=App.display_menu_and_get_input(choices)
+  end
+
   def main_sequence
     #display menu (login or create account)
     choices = ["Log In", "Create Account", "Quit"]
@@ -102,6 +107,7 @@ class App
   end
 
   def self.display_menu_and_get_input(output, message = "Select a following option (type the number):")
+    puts '#############################'
     puts message
     output.each_with_index { |item, index| puts "#{index + 1}. #{item}" }
     validated = false
