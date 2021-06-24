@@ -13,10 +13,10 @@ class Chatroom < ActiveRecord::Base
     end
 
     # return names of users in chatroom
-    def full_names
-        #self.users.map{|user| "#{user.first_name} #{user.last} (#{user.username})"}
-        self.users.map{|user| "#{user.first_name} #{user.last_name}"}
+    def members
+        self.users.map{|user| "#{user.first_name} #{user.last_name} (#{user.username})"}
+        #self.users.map{|user| "#{user.first_name} #{user.last_name}"}
     end
 
-    def 
+    
 end
