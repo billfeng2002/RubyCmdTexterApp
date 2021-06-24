@@ -16,13 +16,33 @@ class App
     when 1
 
     when 2
-
+        self.join_chatroom
     when 3
         
     when 4
         self.clear_data
         self.main_sequence
     end
+  end
+
+  def join_chatroom
+    print "Enter room code:"
+    room_code=$stdin.gets.chomp
+    print "Enter room password(Enter if none):"
+    password=$stdin.gets.chomp
+
+    result=Chatroom.find_chatroom(code: room_code, password: password)
+
+    if(!result)
+        puts "Room not found."
+    elsif (self.user.chatrooms.include?(result))
+        puts "Already in this room!"
+    else
+        Userchatroom.create(user_id: self.user.id, chatroom_id: result.id)
+        puts "Room #{result.name} (code: #{room_code}) successfully joined!"
+    end
+    sleep(1)
+    view_general_options
   end
 
   def edit_account_info

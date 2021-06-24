@@ -32,5 +32,9 @@ class Chatroom < ActiveRecord::Base
     def search(substr)
         self.messages.select{|message| message.value.include? substr}
     end
+
+    def self.find_chatroom(code:, password:)
+        self.find_by(room_code: code, password: password)
+    end
     
 end
