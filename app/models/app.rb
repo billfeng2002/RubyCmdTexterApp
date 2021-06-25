@@ -1,5 +1,14 @@
 class App
-  attr_accessor :user_id, :current_room
+  attr_accessor :user_id, :current_room_id
+
+  def current_room
+    Chatroom.find_by(id: @current_room_id)
+  end
+  def current_room=(room_object)
+    @current_room_id=nil if room_object==nil
+    return if room_object==nil
+    @current_room_id=room_object.id
+  end
 
   def user
     User.find_by(id: @user_id)
