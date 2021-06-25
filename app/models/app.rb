@@ -90,7 +90,7 @@ class App
 
   def leave_room
     #have confirmation, if owner, must reassign
-    if (self.current_room.owner_id == self.user.id)
+    if (self.current_room.owner_id == self.user_id)
       puts "Sorry, please assign the new owner in Manage Users before leaving."
       sleep(1)
       self.room_menu
@@ -120,15 +120,28 @@ class App
     #view past messages, enter to refresh, type and enter to send a message, type "quit" to return
 
     self.print_past_messages
-
-    puts "Type a message and enter to send, Enter to refresh, or type quit to exit."
+    n=50 #default messages to display
+    puts "Type a message and enter to send, Enter to refresh, type '.config <num>' to display the last <num> messages, or type 'quit' to exit."
     input = $stdin.gets.chomp
     while (input != "quit")
-      if (input != "")
+      error=false
+      if((input.length > '.config '.length) && input[0...8]=='.config ')
+        rest=input[8..]
+        begin
+            if(rest.to_i>0)
+                n=rest.to_i
+            else
+                error=true
+            end
+        rescue => exception
+            error=true
+        end
+      elsif (input != "")
         self.sendMessage(input)
       end
-      self.print_past_messages
-      puts "Type a message and enter to send, Enter to refresh, or type quit to exit."
+      self.print_past_messages(n)
+      puts "Previous invalid usage of .config, use as such: '.config 100' to display 100 previous messages." if error
+      puts "Type a message and enter to send, Enter to refresh, type '.config <num>' to display the last <num> messages, or type 'quit' to exit."
       input = $stdin.gets.chomp
     end
     puts "Exiting...."
@@ -137,7 +150,7 @@ class App
   end
 
   def sendMessage(input)
-    Message.create(user_id: self.user.id, chatroom_id: self.chatroom.id, value: input)
+    Message.create(user_id: self.user.id, chatroom_id: self.current_room.id, value: input)
   end
 
   def clear_screen
@@ -147,13 +160,18 @@ class App
   def print_past_messages(n = 50)
     self.clear_screen
     puts "-----Displaying Last #{n} Messages-----"
+    if(n==0)
+        puts "------------End of Messages------------"
+        return
+    end
     messages = self.current_room.last_n_messages(n)
-    max_prefix = messages.max { |message| message[0].length }
+    max_prefix_length = messages.max_by{ |message| message[0].length }[0].size
+    #binding.pry
     messages.each {
       |message|
       print(message[0])
-      print(" " * (max_prefix - message[0].length))
-      puts(">>" + spliced[1])
+      print(" " * (max_prefix_length - message[0].length))
+      puts(">> " + message[1])
     }
     puts "------------End of Messages------------"
   end
