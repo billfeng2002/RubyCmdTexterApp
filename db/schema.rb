@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_06_23_063321) do
+ActiveRecord::Schema.define(version: 2021_06_24_213543) do
 
   create_table "chatrooms", force: :cascade do |t|
     t.string "name"
@@ -23,6 +23,8 @@ ActiveRecord::Schema.define(version: 2021_06_23_063321) do
     t.integer "user_id"
     t.integer "chatroom_id"
     t.string "value"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "userchatrooms", force: :cascade do |t|
