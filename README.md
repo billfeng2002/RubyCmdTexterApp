@@ -1,59 +1,84 @@
-# Module One Final Project Guidelines
-
-Congratulations, you're at the end of module one! You've worked crazy hard to get here and have learned a ton.
-
-For your final project, we'll be building a Command Line database application.
-
-## Project Requirements
-
-### Option One - Data Analytics Project
-
-1. Access a Sqlite3 Database using ActiveRecord.
-2. You should have at minimum three models including one join model. This means you must have a many-to-many relationship.
-3. You should seed your database using data that you collect either from a CSV, a website by scraping, or an API.
-4. Your models should have methods that answer interesting questions about the data. For example, if you've collected info about movie reviews, what is the most popular movie? What movie has the most reviews?
-5. You should provide a CLI to display the return values of your interesting methods.  
-6. Use good OO design patterns. You should have separate classes for your models and CLI interface.
-
-  **Resource:** [Easy Access APIs](https://github.com/learn-co-curriculum/easy-access-apis)
-
-### Option Two - Command Line CRUD App
-
-1. Access a Sqlite3 Database using ActiveRecord.
-2. You should have a minimum of three models.
-3. You should build out a CLI to give your user full CRUD ability for at least one of your resources. For example, build out a command line To-Do list. A user should be able to create a new to-do, see all todos, update a todo item, and delete a todo. Todos can be grouped into categories, so that a to-do has many categories and categories have many to-dos.
-4. Use good OO design patterns. You should have separate classes for your models and CLI interface.
-
-### Brainstorming and Proposing a Project Idea
-
-Projects need to be approved prior to launching into them, so take some time to brainstorm project options that will fulfill the requirements above.  You must have a minimum of four [user stories](https://en.wikipedia.org/wiki/User_story) to help explain how a user will interact with your app.  A user story should follow the general structure of `"As a <role>, I want <goal/desire> so that <benefit>"`. For example, if we were creating an app to randomly choose nearby restaurants on Yelp, we might write:
-
-* As a user, I want to be able to enter my name to retrieve my records
-* As a user, I want to enter a location and be given a random nearby restaurant suggestion
-* As a user, I should be able to reject a suggestion and not see that restaurant suggestion again
-* As a user, I want to be able to save to and retrieve a list of favorite restaurant suggestions
-
-## Instructions
-
-1. Fork and clone this repository.
-2. Build your application. Make sure to commit early and commit often. Commit messages should be meaningful (clearly describe what you're doing in the commit) and accurate (there should be nothing in the commit that doesn't match the description in the commit message). Good rule of thumb is to commit every 3-7 mins of actual coding time. Most of your commits should have under 15 lines of code and a 2 line commit is perfectly acceptable.
-3. Make sure to create a good README.md with a short description, install instructions, a contributor's guide and a link to the license for your code.
-4. Make sure your project checks off each of the above requirements.
-5. Prepare a video demo (narration helps!) describing how a user would interact with your working project.
-    * The video should:
-      - Have an overview of your project. (2 minutes max)
-6. Prepare a presentation to follow your video. (3 minutes max)
-    * Your presentation should:
-      - Describe something you struggled to build, and show us how you ultimately implemented it in your code.
-      - Discuss 3 things you learned in the process of working on this project.
-      - Address what, if anything, you would change or add to what you have today.
-      - Present any code you would like to highlight.   
-7. *OPTIONAL, BUT RECOMMENDED*: Write a blog post about the project and process.
-
+# BashIt ReadMe
 ---
-### Common Questions:
-- How do I turn off my SQL logger?
-```ruby
-# in config/environment.rb add this line:
-ActiveRecord::Base.logger = nil
-```
+
+<img src="https://igotaprinter.com/images/Bash-new.sh-600x600.png" align="right"
+     alt="Cool Image" width="180" height="160">
+
+BashIt is a high performance Command Line interface that offers a state-of-the-art messaging service using Object Orientation Programming.
+
+* **Multi-room support** and **interactive chatroom**.
+* **On demand** user/chat statistics <you can further elaborate with time stamps and what not>
+  or another CI system to know if a pull request adds a massive dependency.
+* **Modular** to fit different various use cases: connect with staff and faculty; enjoy conversations with friends.
+* **Easy-to-use** menu interface
+* Includes simple database debugging tools
+
+<p align="center">
+  <img src="./lib/demo1.png" alt="Sign-in example" width="500">
+</p>
+
+With **Active Record**, BashIt will handle complex user/room relationships. The database contains four tables, which ensure that your data is saved and properly processed.
+
+
+## How It Works
+
+BashIt is a CLI tool that runs off of Active Record and Rake. Simply run rake app inside app/models directory to activate tool.
+
+
+## Usage
+
+### Chat Applications
+
+Suitable for applications that run on lightweight platforms and offers a solid, persistant solution to chat logs.
+
+<summary><b>How to run</b></summary>
+
+1. Clone this repo:
+
+    ```sh
+    $ git clone git@github.com:billfeng2002/RubyCmdTexterApp.git
+    ```
+    
+2. Open the ```RubyCmdTexterApp``` folder and run
+
+    ```sh
+    ruby bin/run.rb
+    ```
+ 
+   which will automatically install dependencies through bundler and start the program. Simply follow the prompts afterwards
+
+3. In the case of gem issues, run ```bundle install``` manually to install gem dependencies and then try running again. Also, try deleting the ```Gemfile.lock``` and reinstalling dependencies.
+<summary><b>How to use the debugger</b></summary>
+
+  * To reseed the database, run ```rake db:seed```
+
+  * To enter debugging mode, run ```rake console```
+
+  * Alternatively, run ```rake app``` to start the app
+
+## Important App Functionality
+
+* Users have a username and password used for login
+
+  * The username is unique, and is used for a user's identification
+
+  * The username cannot be changed, but a user's name can
+
+* When users create a chat, they are assigned as the room's owner
+
+  * Only room owners can change the settings of the room, after selecting the room
+
+  * Owners can add/remove members, delete the chat, or change the room name and password. The room code cannot be changed.
+
+* Messages cannot be deleted, and remain in a group chat even if a user leaves or is kicked
+
+  * Messages are stored permanently, for auditing and moderation purposes, even if the room is deleted.
+
+* The chat room can be configured to display any positive integer number of messages
+
+  * ```.config 100``` will show the most recent messages in the chatroom
+
+  * Pressing the ```return``` key will update the chat room, and typing ```quit``` will exit the chatroom
+
+
+
