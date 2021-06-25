@@ -207,7 +207,19 @@ class App
         end
         manage_room
     when 6
-
+        print "Are you sure you want to delete the room? ('Y' for yes):"
+        confirmation=$stdin.gets.chomp
+        if(confirmation=="Y")
+            associations = Userchatroom.all.select{|userchatroom| userchatroom.chatroom_id == self.current_room.id}
+            associations.each{|association| association.destroy}
+            self.current_room.destroy
+            puts "Room deletion completed."
+            self.chatroom_listing
+        else
+            puts "Deletion cancelled..."
+            sleep(1)
+            manage_room
+        end
     when 7
         self.room_menu
     end
