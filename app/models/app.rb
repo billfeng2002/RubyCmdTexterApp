@@ -187,7 +187,9 @@ class App
 
   def view_room_details
     #shows users sorted by most active, shows room name and code, shows owner
-
+    users = Chatroom.user_activity.map { |each_user| each_user.name }
+    
+    display_arr = users.map { |each_user| "#{each_user} #{self.current_room} #{self.current_room.code} #{User.find_by(id: self.current_room.owner_id.name)}" 
     #implement
 
     print ("Press enter to continue...")
