@@ -57,7 +57,7 @@ class App
       choices = ["View Room Details", "Enter Chatroom", "Leave Room", "Back"]
     end
 
-    response = App.display_menu_and_get_input(choices, "Choose a room to inspect, or go back:")
+    response = App.display_menu_and_get_input(choices, "Choose a menu option for Room '#{self.current_room.name}':")
 
     if (is_owner)
       case response
@@ -114,8 +114,8 @@ class App
 
   def manage_room
     #option to kick members, add members, change password, change name
-    choices = ["View Members", "Add Member", "Kick Member", "Change Chat Name", "Change Chat Password","Change Room Owner" "Delete Room", "Back"]
-    response=App.display_menu_and_get_input(choices)
+    choices = ["View Members", "Add Member", "Kick Member", "Change Chat Name", "Change Chat Password","Change Room Owner", "Delete Room", "Back"]
+    response=App.display_menu_and_get_input(choices, "Room management for Room '#{self.current_room.name}'")
     case response
     when 0
         #view members
@@ -274,6 +274,10 @@ class App
         return
     end
     messages = self.current_room.last_n_messages(n)
+    if(messages==[])
+        puts "------------End of Messages------------"
+        return
+    end
     max_prefix_length = messages.max_by{ |message| message[0].length }[0].size
     #binding.pry
     messages.each {
@@ -387,7 +391,7 @@ class App
   end
 
   def clear_data
-    self.user = nil
+    self.user_id = nil
     self.current_room = nil
   end
 
