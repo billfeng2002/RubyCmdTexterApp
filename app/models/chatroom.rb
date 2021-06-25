@@ -39,4 +39,8 @@ class Chatroom < ActiveRecord::Base
         last_n_messages.map{|message| "#{message.user.name_and_username} #{message.created_at} - #{message.value}"}
     end
     
+    def self.find_chatroom(code:, password:)
+        self.find_by(room_code: code, password: password)
+    end
+    
 end
