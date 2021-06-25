@@ -39,11 +39,63 @@ class App
     if response == rooms.size
       self.view_general_options
     else
-      current_room = display_rooms[response]
+      self.current_room = display_rooms[response]
       # next screen
-        #todo: manage room (if user is owner), leave room, view room details, join chatroom
-        #todo for join chatroom: figure out how to display data nicely and to send messages nicely
+      self.room_menu
     end
+  end
+
+  def room_menu
+    is_owner=self.current_room.owner_id=self.user.id
+    if(is_owner)
+        choices=["View Room Details", "Join Chatroom", "Manage Room (Owner)", "Leave Room", "Back"]
+    else
+        choices=["View Room Details", "Join Chatroom", "Leave Room","Back"]
+    end
+
+    response = App.display_menu_and_get_input(choices, "Choose a room to inspect, or go back:")
+
+    if(is_owner)
+        case response
+
+        end
+    else
+
+    end
+    #todo: manage room (if user is owner), leave room, view room details, join chatroom, go back
+        #todo for join chatroom: figure out how to display data nicely and to send messages nicely
+  end
+
+
+  def leave_room
+    #have confirmation, if owner, must reassign
+  end
+
+  def manage_room
+    #option to kick members, add members, change password, change name
+
+  end
+
+  def chatroom_view
+    #view past messages, enter to refresh, type and enter to send a message, type "quit" to return
+
+    
+
+    if(input=="quit")
+        self.room_menu
+    end
+  end
+
+  def view_room_details
+    #shows users sorted by most active, shows room name and code, shows owner
+
+
+    #implement
+
+
+    print ("Press enter to continue...")
+    $stdin.gets
+    self.room_menu # return
   end
 
   def create_chatroom
