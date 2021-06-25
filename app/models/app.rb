@@ -50,7 +50,7 @@ class App
   end
 
   def room_menu
-    is_owner = self.current_room.owner_id = self.user.id
+    is_owner = self.current_room.owner_id.to_i == self.user.id
     if (is_owner)
       choices = ["View Room Details", "Enter Chatroom", "Manage Room (Owner)", "Leave Room", "Back"]
     else
@@ -90,7 +90,8 @@ class App
 
   def leave_room
     #have confirmation, if owner, must reassign
-    if (self.current_room.owner_id == self.user_id)
+    #binding.pry
+    if (self.current_room.owner_id.to_i == self.user.id)
       puts "Sorry, please assign the new owner in Manage Users before leaving."
       sleep(1)
       self.room_menu
@@ -113,15 +114,102 @@ class App
 
   def manage_room
     #option to kick members, add members, change password, change name
-    choices = ["View Members", "Add Members", "Change Chat Name", "Change Chat Password", "Back"]
+    choices = ["View Members", "Add Member", "Kick Member", "Change Chat Name", "Change Chat Password","Change Room Owner" "Delete Room", "Back"]
     response=App.display_menu_and_get_input(choices)
     case response
     when 0
         #view members
+        self.current_room.display_users
+        print ("Press enter to continue...")
+        $stdin.gets
+        self.manage_room
     when 1
         #add member
+        puts "Adding user..."
+        print "What is the username of the new user?:"
+        username=$stdin.gets.chomp
+        user=User.find_by(username:username)
+        if(user)
+            if(self.current_room.users.include?(user))
+                puts "User already in chat..."
+                sleep(1)
+            else
+                Userchatroom.create(user_id: user.id, chatroom_id: self.current_room.id)
+                puts "User added..."
+                sleep(1)
+            end
+        else
+            puts "User not found..."
+            sleep (1)
+        end
+        manage_room
     when 2
-        
+        print "What is the username of the user to delete?:"
+        username=$stdin.gets.chomp
+        user=User.find_by(username:username)
+        if(user)
+            
+            if(self.current_room.users.include?(user))
+                Userchatroom.find_by(user_id: user.id, chatroom_id: self.current_room.id).destroy
+                puts "Removed user '#{user.name}' from chat..."
+                sleep(1)
+            else
+                puts "User is not in chat..."
+                sleep(1)
+            end
+        else
+            puts "User not found..."
+            sleep (1)
+        end
+        manage_room
+    when 3
+        print "Enter the new chat name:"
+        new_name=$stdin.gets.chomp
+        self.current_room.name=new_name
+        self.current_room.save
+        puts "Chat name changed to #{new_name}."
+        sleep(1)
+        self.manage_room
+    when 4
+        print "Enter the new chat password:"
+        new_password=$stdin.gets.chomp
+        self.current_room.password=new_password
+        self.current_room.save
+        puts "Chat password changed..."
+        sleep(1)
+        self.manage_room
+    when 5
+        print "What is the username of the new owner?:"
+        username=$stdin.gets.chomp
+        user=User.find_by(username:username)
+        if(user)
+            if(self.current_room.users.include?(user))
+                print "User found. Are you sure? ('Y' for yes):"
+                reply=$stdin.gets.chomp
+                if(reply=="Y")
+                    self.current_room.owner_id=user.id
+                    self.current_room.save
+                    puts "Room owner changed."
+                    sleep(1)
+                    self.room_menu
+                else
+                    puts "Operation canceled..."
+                    sleep(1)
+                    self.manage_room
+                end
+            else
+                puts "User is not in the chat! Add them first."
+                sleep(1)
+            end
+        else
+            puts "User not found..."
+            sleep (1)
+        end
+        manage_room
+    when 6
+
+    when 7
+        self.room_menu
     end
   end
 
@@ -187,11 +275,12 @@ class App
 
   def view_room_details
     #shows users sorted by most active, shows room name and code, shows owner
-    users = Chatroom.user_activity.map { |each_user| each_user.name }
     
-    display_arr = users.map { |each_user| "#{each_user} #{self.current_room} #{self.current_room.code} #{User.find_by(id: self.current_room.owner_id.name)}" 
-    #implement
-
+    #room info
+    puts "Displaying room info....."
+    puts "Room Name: #{self.current_room.name}"
+    puts "Room Code: #{self.current_room.room_code}"
+    self.current_room.display_users
     print ("Press enter to continue...")
     $stdin.gets
     self.room_menu # return

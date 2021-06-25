@@ -39,6 +39,13 @@ class Chatroom < ActiveRecord::Base
         last_n_messages.map{|message| ["#{message.user.name_and_username} #{message.created_at}", "#{message.value}"]}
     end
     
+    def display_users
+        puts "Owner:     #{User.find_by(id: self.owner_id).name_and_username}"
+        puts "Members (#{self.users.count} Users):"
+        users = self.user_activity.map { |each_user| each_user.name_and_username}
+        users.each{|user| puts "  "+user}
+    end
+
     def self.find_chatroom(code:, password:)
         self.find_by(room_code: code, password: password)
     end
