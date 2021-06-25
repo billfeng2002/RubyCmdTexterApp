@@ -57,13 +57,30 @@ class App
 
     if(is_owner)
         case response
-
-        end
+        when 0
+            self.view_room_details
+        when 1
+            self.chatroom_view
+        when 2
+            self.manage_room
+        when 3
+            self.leave_room
+        when 4
+            self.chatroom_listing
+        end        
     else
-
+        case response
+        when 0
+            self.view_room_details
+        when 1
+            self.chatroom_view
+        when 2
+            self.leave_room
+        when 3
+            self.chatroom_listing
+        end   
     end
-    #todo: manage room (if user is owner), leave room, view room details, join chatroom, go back
-        #todo for join chatroom: figure out how to display data nicely and to send messages nicely
+    
   end
 
 
