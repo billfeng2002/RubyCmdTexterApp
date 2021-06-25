@@ -398,7 +398,7 @@ class App
   def main_sequence
     #display menu (login or create account)
     choices = ["Log In", "Create Account", "Quit"]
-    response = App.display_menu_and_get_input(choices, "Welcome to BashIt! Select an option below to get started!")
+    response = App.display_menu_and_get_input(choices, "Welcome to Ba$hIt! Select an option below to get started!")
     case response
     when 0
       self.login_sequence
