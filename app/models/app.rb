@@ -1,5 +1,9 @@
 class App
-  attr_accessor :user, :current_room
+  attr_accessor :user_id, :current_room
+
+  def user
+    User.find_by(id: @user_id)
+  end
 
   def self.new_session()
     app = self.new()
@@ -66,7 +70,7 @@ class App
       when 3
         self.leave_room
       when 4
-        self.current_room=nil
+        self.current_room = nil
         self.chatroom_listing
       end
     else
@@ -78,7 +82,7 @@ class App
       when 2
         self.leave_room
       when 3
-        self.current_room=nil
+        self.current_room = nil
         self.chatroom_listing
       end
     end
@@ -86,7 +90,7 @@ class App
 
   def leave_room
     #have confirmation, if owner, must reassign
-    if (self.current_room.owner_id == self.user)
+    if (self.current_room.owner_id == self.user_id)
       puts "Sorry, please assign the new owner in Manage Users before leaving."
       sleep(1)
       self.room_menu
@@ -97,7 +101,7 @@ class App
         Userchatroom.find_by(user_id: self.user.id, chatroom_id: self.current_room.id).destroy
         puts "Successfully left room \"#{self.current_room.name}\". Returning to room selection..."
         sleep(1)
-        self.current_room=nil
+        self.current_room = nil
         self.chatroom_listing
       else
         puts "Operation cancelled..."
@@ -109,15 +113,67 @@ class App
 
   def manage_room
     #option to kick members, add members, change password, change name
-
+    choices = []
   end
 
   def chatroom_view
     #view past messages, enter to refresh, type and enter to send a message, type "quit" to return
 
-    if (input == "quit")
-      self.room_menu
+    self.print_past_messages
+    n=50 #default messages to display
+    puts "Type a message and enter to send, Enter to refresh, type '.config <num>' to display the last <num> messages, or type 'quit' to exit."
+    input = $stdin.gets.chomp
+    while (input != "quit")
+      error=false
+      if((input.length > '.config '.length) && input[0...8]=='.config ')
+        rest=input[8..]
+        begin
+            if(rest.to_i>0)
+                n=rest.to_i
+            else
+                error=true
+            end
+        rescue => exception
+            error=true
+        end
+      elsif (input != "")
+        self.sendMessage(input)
+      end
+      self.print_past_messages(n)
+      puts "Previous invalid usage of .config, use as such: '.config 100' to display 100 previous messages." if error
+      puts "Type a message and enter to send, Enter to refresh, type '.config <num>' to display the last <num> messages, or type 'quit' to exit."
+      input = $stdin.gets.chomp
     end
+    puts "Exiting...."
+    sleep(1)
+    self.room_menu
+  end
+
+  def sendMessage(input)
+    Message.create(user_id: self.user.id, chatroom_id: self.current_room.id, value: input)
+  end
+
+  def clear_screen
+    puts "\n" * 200
+  end
+
+  def print_past_messages(n = 50)
+    self.clear_screen
+    puts "-----Displaying Last #{n} Messages-----"
+    if(n==0)
+        puts "------------End of Messages------------"
+        return
+    end
+    messages = self.current_room.last_n_messages(n)
+    max_prefix_length = messages.max_by{ |message| message[0].length }[0].size
+    #binding.pry
+    messages.each {
+      |message|
+      print(message[0])
+      print(" " * (max_prefix_length - message[0].length))
+      puts(">> " + message[1])
+    }
+    puts "------------End of Messages------------"
   end
 
   def view_room_details
@@ -247,8 +303,9 @@ class App
       username = $stdin.gets.chomp
       print("Enter your password:")
       password = $stdin.gets.chomp
-      self.user = User.check_login(username: username, password: password)
-      if (self.user) #user was found
+      user = User.check_login(username: username, password: password)
+      if (user) #user was found
+        self.user_id=user.id
         break
       else
         puts "Username or password incorrect."

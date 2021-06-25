@@ -36,7 +36,7 @@ class Chatroom < ActiveRecord::Base
     def last_n_messages(n)
         last_n_messages = self.messages.last(n)
         # format: Bill Feng (billfeng) 6/24/21 11:33 AM - Hello World!
-        last_n_messages.map{|message| "#{message.user.name_and_username} #{message.created_at} - #{message.value}"}
+        last_n_messages.map{|message| ["#{message.user.name_and_username} #{message.created_at}", "#{message.value}"]}
     end
     
     def self.find_chatroom(code:, password:)
