@@ -39,53 +39,72 @@ class App
     if response == rooms.size
       self.view_general_options
     else
-      self.current_room = display_rooms[response]
+      self.current_room = rooms[response]
       # next screen
       self.room_menu
     end
   end
 
   def room_menu
-    is_owner=self.current_room.owner_id=self.user.id
-    if(is_owner)
-        choices=["View Room Details", "Join Chatroom", "Manage Room (Owner)", "Leave Room", "Back"]
+    is_owner = self.current_room.owner_id = self.user.id
+    if (is_owner)
+      choices = ["View Room Details", "Enter Chatroom", "Manage Room (Owner)", "Leave Room", "Back"]
     else
-        choices=["View Room Details", "Join Chatroom", "Leave Room","Back"]
+      choices = ["View Room Details", "Enter Chatroom", "Leave Room", "Back"]
     end
 
     response = App.display_menu_and_get_input(choices, "Choose a room to inspect, or go back:")
 
-    if(is_owner)
-        case response
-        when 0
-            self.view_room_details
-        when 1
-            self.chatroom_view
-        when 2
-            self.manage_room
-        when 3
-            self.leave_room
-        when 4
-            self.chatroom_listing
-        end        
+    if (is_owner)
+      case response
+      when 0
+        self.view_room_details
+      when 1
+        self.chatroom_view
+      when 2
+        self.manage_room
+      when 3
+        self.leave_room
+      when 4
+        self.current_room=nil
+        self.chatroom_listing
+      end
     else
-        case response
-        when 0
-            self.view_room_details
-        when 1
-            self.chatroom_view
-        when 2
-            self.leave_room
-        when 3
-            self.chatroom_listing
-        end   
+      case response
+      when 0
+        self.view_room_details
+      when 1
+        self.chatroom_view
+      when 2
+        self.leave_room
+      when 3
+        self.current_room=nil
+        self.chatroom_listing
+      end
     end
-    
   end
-
 
   def leave_room
     #have confirmation, if owner, must reassign
+    if (self.current_room.owner_id == self.user)
+      puts "Sorry, please assign the new owner in Manage Users before leaving."
+      sleep(1)
+      self.room_menu
+    else
+      print "Are you sure you want to leave this room? (Y for yes):"
+      input = $stdin.gets.chomp
+      if (input == "Y")
+        Userchatroom.find_by(user_id: self.user.id, chatroom_id: self.current_room.id).destroy
+        puts "Successfully left room \"#{self.current_room.name}\". Returning to room selection..."
+        sleep(1)
+        self.current_room=nil
+        self.chatroom_listing
+      else
+        puts "Operation cancelled..."
+        sleep(1)
+        self.room_menu
+      end
+    end
   end
 
   def manage_room
@@ -96,19 +115,15 @@ class App
   def chatroom_view
     #view past messages, enter to refresh, type and enter to send a message, type "quit" to return
 
-    
-
-    if(input=="quit")
-        self.room_menu
+    if (input == "quit")
+      self.room_menu
     end
   end
 
   def view_room_details
     #shows users sorted by most active, shows room name and code, shows owner
 
-
     #implement
-
 
     print ("Press enter to continue...")
     $stdin.gets
