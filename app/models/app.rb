@@ -113,7 +113,16 @@ class App
 
   def manage_room
     #option to kick members, add members, change password, change name
-    choices = []
+    choices = ["View Members", "Add Members", "Change Chat Name", "Change Chat Password", "Back"]
+    response=App.display_menu_and_get_input(choices)
+    case response
+    when 0
+        #view members
+    when 1
+        #add member
+    when 2
+        
+    end
   end
 
   def chatroom_view
